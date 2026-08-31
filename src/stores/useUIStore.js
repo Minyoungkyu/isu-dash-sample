@@ -86,7 +86,7 @@ export const useUIStore = create((set) => ({
       ...BASE_RESET, // 기본 지도 상태로 강제 복귀
       // 해당 CCTV 선택 + 비상 상태 + 지도 포커스
       selectedCctv: cam,
-      emergencyAlert: { type, label: cfg.label, sub: cfg.sub, accent: cfg.accent, icon: cfg.icon, camId: cam.id },
+      emergencyAlert: { type, label: cfg.label, sub: cfg.sub, accent: cfg.accent, icon: cfg.icon, camId: cam.id, presets: cfg.presets },
       camFocus: { lng: cam.lng, lat: cam.lat, nonce: ++focusSeq },
     });
   },

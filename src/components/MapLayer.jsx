@@ -109,7 +109,11 @@ export default function MapLayer() {
         const color = ZONE_STATUS[z.status]?.color ?? '#38bdf8';
         const el = zoneLabelEl(z, color);
         el.onclick = () => useUIStore.getState().setActiveZone(z.id); // 항상 해당 공구로 확대(토글 X)
-        new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([z.center[1], z.center[0]]).addTo(map);
+        // 라벨을 폴리곤 상단(위쪽) 위에 띄워 핀들과 겹치지 않게 (anchor:bottom + 위로 오프셋)
+        const topLat = Math.max(...z.polygon.map((p) => p[0]));
+        new maplibregl.Marker({ element: el, anchor: 'bottom', offset: [0, -8] })
+          .setLngLat([z.center[1], topLat])
+          .addTo(map);
       });
       CCTV_LIST.forEach((cam) => {
         const el = cctvEl(cam);

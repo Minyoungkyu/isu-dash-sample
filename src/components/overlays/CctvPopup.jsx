@@ -245,8 +245,10 @@ export default function CctvPopup({ inCell = false, cam: camProp, list, onClose,
         {/* 구분선 */}
         <div style={{ height: 1, background: 'rgba(148,163,184,0.18)' }} />
 
-        {/* TTS 방송 (#3) — 스피커 탑재 카메라만 */}
-        {cam.hasSpeaker ? (
+        {/* TTS 방송 (#3) — 비상 시엔 상황별 문구로 스피커 유무 관계없이 노출 */}
+        {emg ? (
+          <TtsComposer targetLabel={`${cam.name} 스피커`} accent={emg.accent} presets={emg.presets} toastType="broadcast" />
+        ) : cam.hasSpeaker ? (
           <TtsComposer targetLabel={`${cam.name} 스피커`} accent="#38bdf8" />
         ) : (
           <div className="text-slate-500 font-bold" style={{ fontSize: 15 }}>
