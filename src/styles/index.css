@@ -1,0 +1,242 @@
+@import 'tailwindcss';
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+/* ============================================================
+   이수건설 통합관제 대시보드 — 전역 스타일 (다크 관제실 톤)
+   ============================================================ */
+
+:root {
+  --bg-void: #04080f;
+  --bg-panel: rgba(10, 20, 34, 0.82);
+  --line-cyan: rgba(56, 189, 248, 0.35);
+  --accent: #38bdf8;
+  --accent-strong: #00e5ff;
+  --danger: #ff3b5c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  color: #e2e8f0;
+  font-family: 'Pretendard', 'Segoe UI', 'Malgun Gothic', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* 배경 그라디언트는 body 에 — 4K 스테이지는 투명이라 뒤 지도(MapLayer)가 비쳐야 함 */
+body {
+  background: radial-gradient(circle at 50% 0%, #0a1a2e 0%, #04080f 60%);
+}
+
+/* 목업 화면은 4K 캔버스를 스케일해서 뷰포트 중앙에 배치 */
+body,
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ---- 스크롤바 ---- */
+.thin-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.35);
+  border-radius: 8px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.invisible-scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* ---- 관제실 패널 공통 ---- */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line-cyan);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+}
+
+/* ---- MapLibre ---- (VWorld midnight = 이미 다크맵) */
+.maplibregl-map {
+  font-family: inherit;
+  background: #04080f;
+}
+.maplibregl-ctrl-attrib {
+  background: rgba(0, 0, 0, 0.5) !important;
+  color: #64748b !important;
+  font-size: 11px;
+}
+.maplibregl-ctrl-attrib a {
+  color: #94a3b8 !important;
+}
+.maplibregl-ctrl-attrib-button {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 구역 라벨 마커 */
+.zone-label {
+  background: rgba(4, 8, 15, 0.78);
+  border: 1px solid;
+  font-size: 18px;
+  font-weight: 900;
+  padding: 5px 14px;
+  border-radius: 9px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- 지도 핀 (divIcon) ---- */
+.pin-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transform: translateY(-6px);
+  transition: transform 0.15s ease;
+}
+.pin-wrap:hover {
+  transform: translateY(-10px) scale(1.06);
+  z-index: 1000;
+}
+.pin-label {
+  margin-top: 2px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #e2e8f0;
+  background: rgba(4, 8, 15, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  padding: 1px 4px;
+  border-radius: 5px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* ---- 애니메이션 ---- */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.pulse-ring {
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+
+@keyframes sos-flash {
+  0%,
+  100% {
+    background: rgba(255, 59, 92, 0);
+  }
+  50% {
+    background: rgba(255, 59, 92, 0.12);
+  }
+}
+.sos-flash {
+  animation: sos-flash 1s ease-in-out infinite;
+}
+
+/* 비상감지 팝업 적색 점멸 글로우 */
+@keyframes emergency-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px rgba(255, 59, 92, 0.85), 0 0 44px rgba(255, 59, 92, 0.35),
+      0 30px 80px rgba(0, 0, 0, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(255, 59, 92, 1), 0 0 78px rgba(255, 59, 92, 0.75),
+      0 30px 80px rgba(0, 0, 0, 0.8);
+  }
+}
+.emergency-glow {
+  animation: emergency-glow 1.1s ease-in-out infinite;
+}
+
+@keyframes live-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.live-blink {
+  animation: live-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes toast-in {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.toast-in {
+  animation: toast-in 0.22s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-in {
+  animation: fade-in 0.18s ease-out;
+}
+
+@keyframes pop-in {
+  from {
+    transform: translate(-50%, -50%) scale(0.94);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+.pop-in {
+  /* fill-mode both: 애니메이션 종료 후에도 마지막 프레임(translate 중앙정렬) 유지 →
+     팝업이 열린 뒤 우하단으로 밀리는 문제 방지. inline transform 과도 일치. */
+  animation: pop-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ---- 깃발(풍향) 애니메이션 ---- */
+@keyframes flag-wave {
+  0%,
+  100% {
+    transform: skewY(0deg) scaleY(1);
+  }
+  50% {
+    transform: skewY(-4deg) scaleY(0.94);
+  }
+}
+.flag-wave {
+  animation: flag-wave 2s ease-in-out infinite;
+  transform-origin: left center;
+}

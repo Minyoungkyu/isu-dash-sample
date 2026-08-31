@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# build output (GitHub Actions 가 새로 빌드하므로 커밋 불필요)
+dist/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# logs / misc
+*.log
+npm-debug.log*
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,30 @@
+/**
+ * 공사 구역(공구) 목업 데이터.
+ * 실제 현장은 공구가 서로 수 km 떨어져 여러 곳에 분산 → 좌표도 멀리 배치.
+ *  - center: [lat, lng] 구역 중심 (스위처 flyTo / 4분할 중심)
+ *  - polygon: 지도 위 구역 경계(위경도 링, 직사각형). 지도 확대/이동/회전 자동 대응.
+ *  - status: 'normal' | 'caution' | 'danger'
+ */
+
+// 중심에서 직사각형 경계 생성 (h: 위도 반경 ≈ 0.0035 → 약 380m, 경도축 aspect 보정)
+const rect = ([lat, lng], h = 0.0035) => {
+  const w = h * 1.26; // 위도 37.6° 경도축 보정으로 화면상 정사각형에 가깝게
+  return [[lat + h, lng - w], [lat + h, lng + w], [lat - h, lng + w], [lat - h, lng - w]];
+};
+
+export const ZONES = [
+  { id: '브라운스톤 양양', name: '브라운스톤 양양', phase: '지상 골조공사', progress: 62, status: 'normal', lead: '검단 1블록', manager: '김현장', phone: '010-2200-0001', period: '~2027.03', center: [37.6042, 126.6538], polygon: rect([37.6042, 126.6538]) },
+  { id: '마곡 SH', name: '마곡 SH', phase: '터파기 · 흙막이', progress: 34, status: 'caution', lead: '청라 2블록', manager: '이소장', phone: '010-2200-0002', period: '~2027.08', center: [37.5720, 126.6260], polygon: rect([37.5720, 126.6260]) },
+  { id: '부천광희 재건축', name: '부천광희 재건축', phase: '기초 · 지하공사', progress: 48, status: 'danger', lead: '마전 3블록', manager: '박반장', phone: '010-2200-0003', period: '~2027.06', center: [37.6180, 126.6900], polygon: rect([37.6180, 126.6900]) },
+  { id: '이수페타시스 5공장', name: '이수페타시스 5공장', phase: '철근 · 콘크리트 타설', progress: 55, status: 'normal', lead: '가정 4블록', manager: '정기사', phone: '010-2200-0004', period: '~2027.05', center: [37.5850, 126.7150], polygon: rect([37.5850, 126.7150]) },
+  { id: '브라운스톤 월곡센트럴', name: '브라운스톤 월곡센트럴', phase: '부지 정지 · 가설', progress: 18, status: 'caution', lead: '불로 5블록', manager: '최주임', phone: '010-2200-0005', period: '~2027.11', center: [37.6420, 126.6250], polygon: rect([37.6420, 126.6250]) },
+];
+
+export const ZONE_STATUS = {
+  normal: { label: '정상', color: '#22c55e' },
+  caution: { label: '주의', color: '#eab308' },
+  danger: { label: '위험', color: '#ff3b5c' },
+};
+
+// 전체(오버뷰) 뷰용 bounds — 모든 구역 폴리곤을 감싼다.
+export const SITE_BOUNDS = ZONES.flatMap((z) => z.polygon); // [[lat,lng],...]
